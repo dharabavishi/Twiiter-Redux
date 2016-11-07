@@ -10,10 +10,20 @@ import UIKit
 import BDBOAuth1Manager
 class LoginViewController: UIViewController {
 
+    @IBOutlet weak var twitterIconImage: UIImageView!
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+        UIView.animate(withDuration: 0.6 ,
+                                   animations: {
+                                    self.twitterIconImage.transform = CGAffineTransform(scaleX: 4.5, y: 4.5)
+        },
+                                   completion: { finish in
+                                    UIView.animate(withDuration: 0.6){
+                                        self.twitterIconImage.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
+                                    }
+        })
         
         
        
@@ -23,7 +33,10 @@ class LoginViewController: UIViewController {
         
         TwitterClient.sharedInstance.login(success: {
             print("login is successful")
-            self.performSegue(withIdentifier: "loginSegue", sender: nil)
+           
+            
+            self.performSegue(withIdentifier: "hamburgerSegue", sender: nil)
+            
         }) { (error : Error) in
                 print("login is not successful \(error.localizedDescription)")
         }

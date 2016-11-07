@@ -25,6 +25,7 @@ class Tweet: NSObject {
     var retweetedStatusID : String?
     var retweetUserID : String?
     var userMentions : [Any]?
+    var user : User?
     
     
     init(name: String, screen_name: String, tweetText: String,profileImageUrl : URL, currentTime: Date){
@@ -38,7 +39,9 @@ class Tweet: NSObject {
     }
     init(dictionary : NSDictionary){
         
+        
         let userDict = dictionary["user"] as? NSDictionary
+        user = User.init(dictionary: userDict!)
         dictTweets = dictionary
         name = (userDict?["name"] as? String)!
         let screenName = userDict?["screen_name"] as? String
@@ -63,7 +66,7 @@ class Tweet: NSObject {
         favoutitesCount = (dictionary["favorite_count"] as? Int) ?? 0
         
         favourited = (dictionary["favorited"] as? Bool)!
-        isRetweet = (dictionary["retweeted"] as? Int)!
+        //isRetweet = (dictionary["retweeted"] as? Int)!
         if (dictionary["retweeted_status"] != nil){
             
             

@@ -188,5 +188,65 @@ class TwitterClient: BDBOAuth1SessionManager {
                 
         })
     }
+    
+    func getMentions(success: @escaping ([Tweet]) -> (), failure: @escaping (Error)->() ){
+        
+        
+        TwitterClient.sharedInstance.get("1.1/statuses/mentions_timeline.json", parameters: nil, progress: nil, success: { (task : URLSessionDataTask?, requestData : Any?)-> Void in
+            
+            //print(requestData)
+            let tweetsDictionaries = requestData as! [NSDictionary]
+            let tweets = Tweet.tweetsWithArray(dictionaries: tweetsDictionaries)
+            success(tweets)
+            
+            
+        }, failure: { (task : URLSessionDataTask?, error : Error)-> Void in
+            
+            print(error.localizedDescription)
+            failure(error)
+        })
+        
+    }
+    func getUsertimeline(strID : String,success: @escaping ([Tweet]) -> (), failure: @escaping (Error)->() ){
+        
+        let params = ["user_id" : strID]
+        TwitterClient.sharedInstance.get("/1.1/statuses/user_timeline.json", parameters: params, progress: nil, success: { (task : URLSessionDataTask?, requestData : Any?)-> Void in
+            
+            //print(requestData)
+            let tweetsDictionaries = requestData as! [NSDictionary]
+            let tweets = Tweet.tweetsWithArray(dictionaries: tweetsDictionaries)
+            success(tweets)
+            
+            
+        }, failure: { (task : URLSessionDataTask?, error : Error)-> Void in
+            
+            print(error.localizedDescription)
+            failure(error)
+        })
+        
+    }
+    
+   
+    
+    func getUserTimeLine(_ userID:String, success: @escaping ([Tweet])->(), failure: @escaping (Error?)->()) {
+        
+        
+        let parameter = ["user_id": userID as String]
+        TwitterClient.sharedInstance.get("/1.1/statuses/user_timeline.json", parameters: parameter, progress: nil, success: { (task : URLSessionDataTask?, requestData : Any?)-> Void in
+            
+            let tweetsDictionaries = requestData as! [NSDictionary]
+            let tweets = Tweet.tweetsWithArray(dictionaries: tweetsDictionaries)
+            success(tweets)
+            
+            
+        }, failure: { (task : URLSessionDataTask?, error : Error)-> Void in
+            
+            print(error.localizedDescription)
+            failure(error)
+        })
+       
+    }
+    
+    
 
 }

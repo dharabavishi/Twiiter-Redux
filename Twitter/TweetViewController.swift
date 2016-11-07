@@ -8,12 +8,20 @@
 
 import UIKit
 import MBProgressHUD
+protocol TweetViewControllerDelegate {
+    func hamburgerIconClicked()
+}
 class TweetViewController: UIViewController,UITableViewDataSource,UITableViewDelegate,TweetsDetailViewControllerDelegate,ComposeTweetViewControllerDelegate,UIScrollViewDelegate {
+    
+
     
     @IBOutlet weak var tableView: UITableView!
     var tweets : [Tweet]!
+    var mentions : [Tweet]!
     let refreshControl = UIRefreshControl()
     var isMoreDataLoading = false
+    var selectedMenu = 1
+    var delegate : TweetViewControllerDelegate?
     
     //var loadingMoreView:InfiniteScrollActivityView?
     
@@ -23,75 +31,112 @@ class TweetViewController: UIViewController,UITableViewDataSource,UITableViewDel
         setUpPullToRefresh()
         setUpTableView()
         setUpNavigationBar()
-        //setupScrollViewIndicator()
-        getRefreshTweets(isHud: true)
-        
-        // Do any additional setup after loading the view.
+        getRefreshTweetsMentions(isHud: true, callBothMehods: true)
+       
     }
-//    func setupScrollViewIndicator(){
-//        // Set up Infinite Scroll loading indicator
-//        let frame = CGRect(origin: CGPoint (x : 0, y : tableView.contentSize.height),size : CGSize( width : tableView.bounds.size.width,height : InfiniteScrollActivityView.defaultHeight))
-//        loadingMoreView = InfiniteScrollActivityView(frame: frame)
-//        loadingMoreView!.isHidden = true
-//        tableView.addSubview(loadingMoreView!)
-//        
-//        var insets = tableView.contentInset;
-//        insets.bottom += InfiniteScrollActivityView.defaultHeight;
-//        tableView.contentInset = insets
-//    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+       
     }
     override func viewWillAppear(_ animated: Bool) {
-        self.navigationController?.navigationBar.backItem?.title = ""
-        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: UIBarButtonItemStyle.plain, target: nil, action: nil)
+        
+        setUpNavigationTitle()
+        //print(mentions)
+        //print(tweets)
+        self.tableView.reloadData()
+        
+        
     }
     func setUpPullToRefresh(){
         
        
         refreshControl.addTarget(self, action: #selector(self.refreshControlAction(refreshControl:)), for: UIControlEvents.valueChanged)
-        // add refresh control to table view
         tableView.insertSubview(refreshControl, at: 0)
     }
-    func getRefreshTweets(isHud : Bool){
+    
+    func getRefreshTweetsMentions(isHud : Bool, callBothMehods:Bool){
         
         if(isHud){
             addHud()
         }
        
-        TwitterClient.sharedInstance.homeTimeline(success: { (tweets : [Tweet]) in
-            
-            
-            self.tweets = tweets
-            for tweet in self.tweets{
+        if(selectedMenu == 1 || callBothMehods){
+         
+                TwitterClient.sharedInstance.homeTimeline(success: { (tweets : [Tweet]) in
                 
                 
-                print("__________________")
-                print(tweet.text!)
-                print(tweet.favoutitesCount)
-                print(tweet.timestamp)
+                self.tweets = tweets
                 self.tableView.reloadData()
                 self.dismissHud()
                 
+                
+                
+            }) { (error : Error) in
+                
+                self.dismissHud()
+                
             }
-            
-        }) { (error : Error) in
-            
-             self.dismissHud()
-            
+
         }
+        if(selectedMenu == 2 || callBothMehods){
+           
+            TwitterClient.sharedInstance.getMentions(success: { (mentions : [Tweet]) in
+                
+                
+                self.mentions = mentions
+                self.tableView.reloadData()
+                self.dismissHud()
+                
+            }) { (error : Error) in
+                
+                self.dismissHud()
+                
+            }
+        }
+        
+    }
+    
+    @IBAction func imageTapped(_ sender: UITapGestureRecognizer) {
+        
+         let indexPath = tableView.indexPath(for: sender.view?.superview?.superview as! UITableViewCell)!
+        
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let profileViewController = storyboard.instantiateViewController(withIdentifier: "profileViewController") as! ProfileViewController
+        
+        
+        profileViewController.user = tweets[indexPath.row].user
+        
+       
+       
+        present(profileViewController, animated: true) {
+        }
+
+        
+        
+        
     }
     func setUpNavigationBar(){
         navigationController?.navigationBar.barTintColor = UIColor.white
         //UIColor.init(colorLiteralRed: 51.0/255.0, green: 145.0/255.0, blue: 236.0/255.0, alpha: 1)
-        let imageView = UIImageView(frame: CGRect(x: 0, y: 2, width: 30 , height: 30))
-        imageView.contentMode = UIViewContentMode.center
-        let imageName = UIImage(named: "navTitle")
-        imageView.image = imageName
-        self.navigationItem.titleView = imageView
+//        let imageView = UIImageView(frame: CGRect(x: 0, y: 2, width: 30 , height: 30))
+//        imageView.contentMode = UIViewContentMode.center
+//        let imageName = UIImage(named: "navTitle")
+//        imageView.image = imageName
+//        self.navigationItem.titleView = imageView
+        self.navigationController?.navigationBar.backItem?.title = ""
+        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: UIBarButtonItemStyle.plain, target: nil, action: nil)
+        print("here is muenu selectd \(selectedMenu)")
 
         
+    }
+    func setUpNavigationTitle(){
+        if(selectedMenu == 1){
+            
+            self.title = "Timeline"
+        }else{
+            self.title = "Mentions"
+        }
+
     }
     func setUpTableView(){
         self.tableView.estimatedRowHeight = 550
@@ -100,24 +145,41 @@ class TweetViewController: UIViewController,UITableViewDataSource,UITableViewDel
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        if (self.tweets) != nil{
-            
-            return self.tweets.count
+        if (selectedMenu == 1){
+            if (self.tweets) != nil{
+                
+                return self.tweets.count
+            }
+            else{
+                return 0
+            }
+        }else{
+            if (self.mentions) != nil{
+                
+                return self.mentions.count
+            }
+            else{
+                return 0
+            }
         }
-        else{
-            return 0
-        }
+        
         
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "TweetsCell", for: indexPath) as! TweetsCell
-        cell.tweet = self.tweets[indexPath.row]
+        cell.profileImageView.isUserInteractionEnabled = true
+        if (selectedMenu == 1){
+             cell.tweet = self.tweets[indexPath.row]
+        }else{
+             cell.tweet = self.mentions[indexPath.row]
+        }
+       
         return cell
     }
     func refreshControlAction(refreshControl: UIRefreshControl) {
         
-       getRefreshTweets(isHud: false)
+        getRefreshTweetsMentions(isHud: false, callBothMehods: false)
     }
     
     func addHud(){
@@ -128,9 +190,10 @@ class TweetViewController: UIViewController,UITableViewDataSource,UITableViewDel
         self.refreshControl.endRefreshing()
     }
     //MARK: IBACTIONS
-    @IBAction func onLogoutClick(_ sender: AnyObject) {
+    @IBAction func onMenuClick(_ sender: AnyObject) {
         
-        TwitterClient.sharedInstance.logout()
+         NotificationCenter.default.postNotification(event: HamburgerEvent.ToggleMenu)
+        
     }
     
      @IBAction func onComposeNewTweet(_ sender: AnyObject) {
@@ -163,20 +226,32 @@ class TweetViewController: UIViewController,UITableViewDataSource,UITableViewDel
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
         if(segue.identifier == "tweetVCDetailSegue") {
+            let tweetDetailsViewController = segue.destination as! TweetsDetailViewController
+           
             let cell = sender as! TweetsCell
             let indexPath = tableView.indexPath(for: cell)
-            let tweet = tweets[(indexPath! as NSIndexPath).row]
-            
-            let tweetDetailsViewController = segue.destination as! TweetsDetailViewController
+            let tweet : Tweet
+            if(selectedMenu == 1){
+                 tweet = tweets[(indexPath! as NSIndexPath).row]
+                tweetDetailsViewController.title = "Timeline"
+                
+            }else{
+                tweet = mentions[(indexPath! as NSIndexPath).row]
+                tweetDetailsViewController.title = "Mentions"
+            }
             tweetDetailsViewController.tweet = tweet
             tweetDetailsViewController.delegate = self
+            
+            
         }
     }
     //MARK: Detail delegate
     func reloadDataFromDetail(tweet: Tweet){
+        
         self.tableView.reloadData()
     }
     func fromComposeTweet(tweet: Tweet){
+        
         self.tweets.insert(tweet, at: 0)
         self.tableView.reloadData()
     }
@@ -197,6 +272,21 @@ class TweetViewController: UIViewController,UITableViewDataSource,UITableViewDel
             }
         }
     }
+    
+    
+    
+    //    func setupScrollViewIndicator(){
+    //        // Set up Infinite Scroll loading indicator
+    //        let frame = CGRect(origin: CGPoint (x : 0, y : tableView.contentSize.height),size : CGSize( width : tableView.bounds.size.width,height : InfiniteScrollActivityView.defaultHeight))
+    //        loadingMoreView = InfiniteScrollActivityView(frame: frame)
+    //        loadingMoreView!.isHidden = true
+    //        tableView.addSubview(loadingMoreView!)
+    //
+    //        var insets = tableView.contentInset;
+    //        insets.bottom += InfiniteScrollActivityView.defaultHeight;
+    //        tableView.contentInset = insets
+    //    }
+
 //    func loadMoreData() {
 //        
 //        TwitterClient.sharedInstance.loadMoreHomeTimeline(params: Int64.max, success: { (newTweets : [Tweet]) in

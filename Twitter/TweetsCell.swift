@@ -90,7 +90,7 @@ class TweetsCell: UITableViewCell {
             profileImageTopConstraint.constant = 8
             reTweetedStackView.isHidden = true
             retweetButton.isSelected = false
-            print("tweet status is \(tweet.retweetedStatus)")
+           // print("tweet status is \(tweet.retweetedStatus)")
             if tweet.isRetweet == 1  {
                 
                 retweetButton.isSelected = true
@@ -118,9 +118,10 @@ class TweetsCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        profileImageView.layer.cornerRadius = 5
+        profileImageView.layer.cornerRadius = 3
         profileImageView.clipsToBounds = true
         self.selectionStyle = .none
+        profileImageView.isUserInteractionEnabled = true
         
     }
     @IBAction func retweetClick(_ sender: UIButton) {

@@ -110,7 +110,7 @@ class TweetsDetailViewController: UIViewController {
         profileImageTopConstraint.constant = 72
         reTweetedStackView.isHidden = true
         retweetButton.isSelected = false
-        print("tweet status is \(tweet.retweetedStatus)")
+        //print("tweet status is \(tweet.retweetedStatus)")
         if tweet.isRetweet == 1  {
             
             retweetButton.isSelected = true
