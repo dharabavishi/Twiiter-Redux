@@ -6,6 +6,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11524"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -777,15 +778,27 @@
                                                     <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="o3Z-Cf-eNa">
+                                                    <rect key="frame" x="8" y="26" width="44" height="44"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="44" id="H0s-4N-Paq"/>
+                                                        <constraint firstAttribute="width" constant="44" id="nMe-X1-VWa"/>
+                                                    </constraints>
+                                                    <connections>
+                                                        <action selector="imageTapped:" destination="iak-On-C3a" eventType="touchUpInside" id="1IR-U7-U7C"/>
+                                                    </connections>
+                                                </button>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="rwD-1L-iMh" secondAttribute="bottom" constant="8" id="0Pz-x0-kGK"/>
                                                 <constraint firstItem="rwD-1L-iMh" firstAttribute="top" secondItem="Pys-DQ-qUH" secondAttribute="bottom" constant="8" id="5Lg-ad-yRu"/>
                                                 <constraint firstItem="kPJ-si-UMO" firstAttribute="top" secondItem="rwD-1L-iMh" secondAttribute="top" id="8HB-GA-0KP"/>
+                                                <constraint firstItem="o3Z-Cf-eNa" firstAttribute="leading" secondItem="xcT-Vm-WGC" secondAttribute="leadingMargin" id="AlC-dB-t5e"/>
                                                 <constraint firstItem="MmL-a3-vdh" firstAttribute="leading" secondItem="rwD-1L-iMh" secondAttribute="trailing" constant="41" id="BVu-zR-lmZ"/>
                                                 <constraint firstItem="den-BW-MXD" firstAttribute="leading" secondItem="MmL-a3-vdh" secondAttribute="trailing" constant="6" id="IBH-pE-ksH"/>
                                                 <constraint firstItem="j96-OI-9Fa" firstAttribute="top" secondItem="O6N-IK-sy6" secondAttribute="top" id="Jb0-ku-qum"/>
                                                 <constraint firstItem="rwD-1L-iMh" firstAttribute="leading" secondItem="xcT-Vm-WGC" secondAttribute="leading" constant="60" id="NrA-xK-Msj"/>
+                                                <constraint firstItem="Pys-DQ-qUH" firstAttribute="leading" secondItem="o3Z-Cf-eNa" secondAttribute="trailing" constant="8" id="OSW-J5-iEA"/>
                                                 <constraint firstItem="tWq-E5-kdX" firstAttribute="leading" secondItem="kPJ-si-UMO" secondAttribute="trailing" constant="4" id="Qej-x0-gk2"/>
                                                 <constraint firstItem="kPJ-si-UMO" firstAttribute="leading" secondItem="den-BW-MXD" secondAttribute="trailing" constant="41" id="SsM-NY-17d"/>
                                                 <constraint firstItem="O6N-IK-sy6" firstAttribute="top" secondItem="xcT-Vm-WGC" secondAttribute="top" constant="26" id="ZEh-Sj-kRR"/>
@@ -803,6 +816,7 @@
                                                 <constraint firstItem="Fef-cR-VA7" firstAttribute="leading" secondItem="Cuc-lY-2ae" secondAttribute="trailing" constant="4" id="suD-ih-vtm"/>
                                                 <constraint firstItem="Pys-DQ-qUH" firstAttribute="top" secondItem="j96-OI-9Fa" secondAttribute="bottom" constant="2" id="tan-dx-Nah"/>
                                                 <constraint firstItem="Fef-cR-VA7" firstAttribute="top" secondItem="Cuc-lY-2ae" secondAttribute="top" id="u7B-xB-tzY"/>
+                                                <constraint firstItem="o3Z-Cf-eNa" firstAttribute="top" secondItem="PN6-rd-Z9u" secondAttribute="bottom" constant="4" id="ue3-9G-A3u"/>
                                                 <constraint firstItem="O6N-IK-sy6" firstAttribute="leading" secondItem="xcT-Vm-WGC" secondAttribute="leading" constant="8" id="wLF-Mg-SuM"/>
                                             </constraints>
                                         </tableViewCellContentView>

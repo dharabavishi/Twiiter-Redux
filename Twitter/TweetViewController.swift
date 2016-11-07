@@ -54,6 +54,21 @@ class TweetViewController: UIViewController,UITableViewDataSource,UITableViewDel
         tableView.insertSubview(refreshControl, at: 0)
     }
     
+    @IBAction func imageTapped(_ sender: UIButton) {
+        
+        let indexPath = tableView.indexPath(for: sender.superview?.superview as! UITableViewCell)!
+        
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let profileViewController = storyboard.instantiateViewController(withIdentifier: "profileViewController") as! ProfileViewController
+        
+        
+        profileViewController.user = tweets[indexPath.row].user
+        
+        
+        
+        present(profileViewController, animated: true) {
+        }
+    }
     func getRefreshTweetsMentions(isHud : Bool, callBothMehods:Bool){
         
         if(isHud){
@@ -96,25 +111,7 @@ class TweetViewController: UIViewController,UITableViewDataSource,UITableViewDel
         
     }
     
-    @IBAction func imageTapped(_ sender: UITapGestureRecognizer) {
-        
-         let indexPath = tableView.indexPath(for: sender.view?.superview?.superview as! UITableViewCell)!
-        
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let profileViewController = storyboard.instantiateViewController(withIdentifier: "profileViewController") as! ProfileViewController
-        
-        
-        profileViewController.user = tweets[indexPath.row].user
-        
-       
-       
-        present(profileViewController, animated: true) {
-        }
-
-        
-        
-        
-    }
+    
     func setUpNavigationBar(){
         navigationController?.navigationBar.barTintColor = UIColor.white
         //UIColor.init(colorLiteralRed: 51.0/255.0, green: 145.0/255.0, blue: 236.0/255.0, alpha: 1)
