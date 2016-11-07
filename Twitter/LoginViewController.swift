@@ -34,8 +34,10 @@ class LoginViewController: UIViewController {
         TwitterClient.sharedInstance.login(success: {
             print("login is successful")
            
+            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+            appDelegate.showHamburgerView()
             
-            self.performSegue(withIdentifier: "hamburgerSegue", sender: nil)
+            
             
         }) { (error : Error) in
                 print("login is not successful \(error.localizedDescription)")

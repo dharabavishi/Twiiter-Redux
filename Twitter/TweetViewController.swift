@@ -14,6 +14,7 @@ protocol TweetViewControllerDelegate {
 class TweetViewController: UIViewController,UITableViewDataSource,UITableViewDelegate,TweetsDetailViewControllerDelegate,ComposeTweetViewControllerDelegate,UIScrollViewDelegate {
     
 
+    @IBOutlet var tapGestureOnImage: UITapGestureRecognizer!
     
     @IBOutlet weak var tableView: UITableView!
     var tweets : [Tweet]!
@@ -41,9 +42,8 @@ class TweetViewController: UIViewController,UITableViewDataSource,UITableViewDel
     override func viewWillAppear(_ animated: Bool) {
         
         setUpNavigationTitle()
-        //print(mentions)
-        //print(tweets)
         self.tableView.reloadData()
+        
         
         
     }
@@ -169,6 +169,9 @@ class TweetViewController: UIViewController,UITableViewDataSource,UITableViewDel
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "TweetsCell", for: indexPath) as! TweetsCell
         cell.profileImageView.isUserInteractionEnabled = true
+        tapGestureOnImage.numberOfTapsRequired = 1
+       
+        cell.profileImageView.addGestureRecognizer(tapGestureOnImage)
         if (selectedMenu == 1){
              cell.tweet = self.tweets[indexPath.row]
         }else{

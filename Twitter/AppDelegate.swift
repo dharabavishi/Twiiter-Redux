@@ -22,14 +22,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         
         if User.currentUser != nil {
-           
-//            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-//            let vc = storyboard.instantiateViewController(withIdentifier: "TweetsNavigationController")
-//            window?.rootViewController = vc
-            
-            
-//            let hamburgerViewController = window!.rootViewController as! HamburgerViewController
-           
             
             showHamburgerView()
            
@@ -83,10 +75,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let hamburgerViewController = storyboard.instantiateViewController(withIdentifier: "hamburgerViewController") as! HamburgerViewController
         self.window?.rootViewController = hamburgerViewController
         let menuViewController = storyboard.instantiateViewController(withIdentifier: "MenuViewController") as! MenuViewController
-        
-        
+       
         hamburgerViewController.menuViewController = menuViewController
-        menuViewController.hambugerViewController = hamburgerViewController
+       menuViewController.hambugerViewController = hamburgerViewController
         
     }
 

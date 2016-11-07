@@ -54,11 +54,14 @@ class MenuViewController: UIViewController,UITableViewDataSource,UITableViewDele
         if(indexPath.row == 0){
             
             let cell = tableView.dequeueReusableCell(withIdentifier: "ProfileCell", for: indexPath) as! ProfileCell
-            let user = User.currentUser!
-            cell.profileImage.setImageWith((user.profileURL)!)
-            cell.screenNameLabel.text = user.screenName
-            cell.nameLabel.text = user.name
-            cell.bannerImageView.setImageWith(user.bannerImage!)
+            if User.currentUser != nil{
+                let user = User.currentUser!
+                cell.profileImage.setImageWith((user.profileURL)!)
+                cell.screenNameLabel.text = user.screenName
+                cell.nameLabel.text = user.name
+                cell.bannerImageView.setImageWith(user.bannerImage!)
+            }
+           
             
             return cell
 
